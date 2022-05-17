@@ -54,6 +54,8 @@ composer require laminas/laminas-diactoros
 composer require laminas/laminas-httphandlerrunner
 ```
 
+`vendor`ディレクトリが作成され、インストールしたパッケージが入るので、念のため確認しておく。
+
 ### ライブラリの依存関係について
 
 league/routeをインストール時、依存関係が色々ごそっと入るが、  
