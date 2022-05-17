@@ -69,7 +69,7 @@ composer require laminas/laminas-diactoros
 composer require laminas/laminas-httphandlerrunner
 ```
 
-`vendor`ディレクトリが作成され、インストールしたパッケージが入るので、念のため確認しておく。
+`vendor`ディレクトリが作成され、インストールしたパッケージが入るので確認しておく。
 
 ### ライブラリの依存関係について
 
