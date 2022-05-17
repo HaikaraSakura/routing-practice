@@ -20,7 +20,7 @@ OCIサーバ上にComposerが入っているので、そちらを利用のこと
 
 ## プロジェクトの作成とインストール
 
-任意のプロジェクトディレクトリを作成。  
+任意のプロジェクトディレクトリを作成。ここでは`routing_practice`というディレクトリを作成したものとする。  
 ディレクトリ内に移動して、以下のコマンドを実行し、Composerでのプロジェクト管理をセットアップする。
 
 ```bash
@@ -30,12 +30,10 @@ composer init
 対話を求められるが、基本はデフォルトでいいので`Enter`を押下。
 以下の項目は返答する。
 
-- Author
+- Author  
   `n`を入力でスキップ
-- Package Type
+- Package Type  
   `project`を入力。`Enter`押下でも問題はない。
-- Add PSR-4 autoload mapping?
-  `n`を入力でスキップ
 
 プロジェクトディレクトリ直下にcomposer.jsonが作成されるので、念のため中身を確認しておく。  
 `name`と`require`しかない状態でOK。
@@ -91,7 +89,10 @@ error_reporting(E_ALL);
 開発段階なのですべてのエラーを出す。  
 declare(strict_types=1)は、これがないと関数などの型が曖昧になるので、全ファイルに開発/本番を問わず必ず記述する。
 
-続けて`index.php`に以下を追記する。
+続けて`index.php`に以下を追記し、以下のようなURLでブラウザで動作を確認する。  
+[http://192.168.64.8/routing_practice/?id=1](http://192.168.64.8/routing_practice/?id=1)  
+
+※BASE_ROUTE定数の値は任意のディレクトリ名に変更のこと。
 
 ```PHP
 use \League\Route\Router;
