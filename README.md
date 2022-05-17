@@ -14,7 +14,7 @@ OCIサーバ上にComposerが入っているので、そちらを利用のこと
   別の軽量なルーティングライブラリである[nikic/FastRoute](https://github.com/nikic/FastRoute)を拡張したもの。
 - [laminas/diactor](https://docs.laminas.dev/laminas-diactoros/)  
   Zend Frameworkの後継であるLaminasプロジェクトのPSR−7実装ライブラリ。  
-- [laminas/laminas-httphandlerrunner](https://docs.laminas.dev/laminas-httphandlerrunner/)
+- [laminas/laminas-httphandlerrunner](https://docs.laminas.dev/laminas-httphandlerrunner/)  
   適切なHTTPレスポンスを生成する。
 
 ## プロジェクトの作成とインストール
