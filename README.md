@@ -157,12 +157,21 @@ $response = $router->dispatch($request);
 (new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
 ```
 
-`Router::map`の第三引数に渡しているのが、具体的な処理内容（ルーティングコールバック）となる。  
 全体としては以下の流れになっている。
 
 ```txt
 Request生成 -> ルーティング登録 -> Response生成 -> HTTPレスポンス返却
 ```
+
+### Router::mapメソッドの引数
+
+- 第1引数
+  GET、POSTなどのHTTPメソッドを指定する。
+- 第2引数
+  ルーティングパターン。どのようなURLでリクエストがあったときに処理をおこなうのかを指定する。
+- 第3引数
+  ルーティングコールバック。実行したい処理を持つCallableな値を渡す。例ではクロージャを渡している。
+  戻り値として必ずResponseオブジェクトを返さなければならない。
 
 ## コールバックの切り出し
 
