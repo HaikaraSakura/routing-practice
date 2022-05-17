@@ -3,7 +3,8 @@
 ルーティングと、HTTPリクエスト/レスポンスを取り扱うPSR-7準拠のライブラリについて。  
 
 Composerの利用を前提とする。ローカルに環境がない場合は、  
-OCIサーバ上にComposerが入っているので、そちらを利用のこと。
+OCIサーバ上にComposerが入っているので、そちらを利用のこと。  
+MAMPは.htaccessでのリライトの挙動がおかしかったりするので非推奨。
 
 ## 構成
 
@@ -76,6 +77,14 @@ league/routeをインストール時、依存関係が色々ごそっと入る�
   `opis`は他にも基本的な複数のライブラリを長らくメンテナンスしている開発者団体。
 
 ## ルーティングの記述
+
+プロジェクトディレクトリ直下に`.htaccess`を作成、以下を記述する。
+
+```txt
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !(public/)
+RewriteRule ^ index.php [QSA,L]
+```
 
 プロジェクトディレクトリ直下に`index.php`を作成、以下を記述する。
 
