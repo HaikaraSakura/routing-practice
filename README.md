@@ -122,7 +122,6 @@ declare(strict_types=1)は、これがないと関数などの型が曖昧にな
 [http://192.168.64.8/routing_practice/?id=1](http://192.168.64.8/routing_practice/?id=1)  
 
 ```PHP
-use \League\Route\Router;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 
@@ -132,7 +131,7 @@ const BASE_ROUTE = '/routing_practice';
 // Requestオブジェクトを生成
 $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals();
 
-$router = new Router();
+$router = new \League\Route\Router();
 
 // ルーティングを登録
 $router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request): ResponseInterface {
