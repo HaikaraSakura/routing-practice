@@ -55,9 +55,11 @@ composer require laminas/laminas-httphandlerrunner
 
 ### ライブラリの依存関係について
 
-league/routeをインストール時、依存関係が色々ごそっと入るが、
-ベンダー名が`psr`となっているものはPHP-FIGが定義したPSRのインターフェイスであり、
+league/routeをインストール時、依存関係が色々ごそっと入るが、  
+ベンダー名が`psr`となっているものはPHP-FIGが定義したPSRのインターフェイスであり、  
 それ自体が実装を伴うものではないので問題ない。  
+
+以下がleague/routeの依存ライブラリとなる。
 
 - nikic/fast-route  
   軽量なルーティングライブラリ。Slimもこれに依存している。  
