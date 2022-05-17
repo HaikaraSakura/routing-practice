@@ -114,7 +114,7 @@ use \Psr\Http\Message\ServerRequestInterface;
 const BASE_ROUTE = '/routing_practice';
 
 // Requestオブジェクトを生成
-$request = Laminas\Diactoros\ServerRequestFactory::fromGlobals();
+$request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals();
 
 $router = new Router();
 
@@ -139,7 +139,7 @@ $router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request)
 $response = $router->dispatch($request);
 
 // ResponseオブジェクトからHTTPレスポンスを出力
-(new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+(new \Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
 ```
 
 `Router::map`の第三引数に渡しているのが、具体的な処理内容（ルーティングコールバック）となる。  
