@@ -37,7 +37,22 @@ composer init
   `project`を入力。`Enter`押下でも問題はない。
 
 プロジェクトディレクトリ直下にcomposer.jsonが作成されるので、念のため中身を確認しておく。  
-`name`と`require`しかない状態でOK。
+以下のようになっていれば成功。
+
+```json
+{
+    "name": "ubuntu/routing_practice",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Ubuntu\\RoutingPractice\\": "src/"
+        }
+    },
+    "require": {}
+}
+```
+
+`Ubuntu\\RoutingPractice\\`の部分は`App\\`に変更しておく。
 
 続けて、`composer require`コマンドで必要なパッケージ群をインストールしていく。  
 一括でもインストールできるが、今回はひとつずつ入れていく。
