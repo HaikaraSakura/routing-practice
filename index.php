@@ -20,21 +20,9 @@ $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals();
 $router = new Router();
 
 // ルーティングを登録
-$router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request): ResponseInterface {
-    // URLパラメータからidの値を取得
-    $query_params = $request->getQueryParams();
-    $id = filter_var($query_params['id'] ?? null, FILTER_VALIDATE_INT);
+$router->map('GET', BASE_ROUTE . '/', new \App\IndexAction($response))->setName('IndexAction');
 
-    // Responseオブジェクトを生成
-    $response = new \Laminas\Diactoros\Response;
-    $response->getBody()->write(<<< HTML
-        <h1>Index</h1>
-        <p>ID:{$id}</p>
-    HTML);
-
-    // Responseオブジェクトを返却
-    return $response;
-})->setName('Index');
+$router->map('GET', BASE_ROUTE . '/products[/]', new \App\IndexAction($response))->setName('ProductsAction');
 
 // Responseオブジェクトを生成
 $response = $router->dispatch($request);
