@@ -28,7 +28,7 @@ $router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request)
     // Responseオブジェクトを生成
     $response = new \Laminas\Diactoros\Response;
     $response->getBody()->write(<<< HTML
-        <h1>products</h1>
+        <h1>Index</h1>
         <p>ID:{$id}</p>
     HTML);
 
