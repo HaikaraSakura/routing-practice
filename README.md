@@ -1,1 +1,207 @@
-# routing-practice
+# ルーティングとHTTPリクエスト/レスポンスの取り扱い
+
+URLパラメータではなく、URIによってルーティングをおこなうライブラリと、  
+HTTPリクエスト/レスポンスの取り扱うPSR-7およびPSR-17準拠のライブラリについて。  
+
+Composerの利用を前提とする。ローカルに環境がない場合は、  
+OCIサーバ上にComposerが入っているので、そちらを利用のこと。
+
+## 構成
+
+マイクロフレームワークのSlimで済む内容ではあるが、今回は以下のライブラリの組み合わせで解説する。  
+
+- [league/route](https://route.thephpleague.com/5.x/)  
+  The PHP Leagueがメンテナンスしているルーティングライブラリ。PSR-7の実装を要求する。  
+  別の軽量なルーティングライブラリである[nikic/FastRoute](https://github.com/nikic/FastRoute)を拡張したもの。
+- [laminas/diactor](https://docs.laminas.dev/laminas-diactoros/)  
+  Zend Frameworkの後継であるLaminasプロジェクトのPSR−7実装ライブラリ。  
+- [laminas/laminas-httphandlerrunner](https://docs.laminas.dev/laminas-httphandlerrunner/)
+  適切なHTTPレスポンスを生成する。
+
+## プロジェクトの作成とインストール
+
+任意のプロジェクトディレクトリを作成。  
+ディレクトリ内に移動して、以下のコマンドを実行し、Composerでのプロジェクト管理をセットアップする。
+
+```bash
+composer init
+```
+
+対話を求められるが、基本はデフォルトでいいので`Enter`を押下。
+以下の項目は返答する。
+
+- Author
+  `n`を入力でスキップ
+- Package Type
+  `project`を入力。`Enter`押下でも問題はない。
+- Add PSR-4 autoload mapping?
+  `n`を入力でスキップ
+
+プロジェクトディレクトリ直下にcomposer.jsonが作成されるので、念のため中身を確認しておく。  
+`name`と`require`しかない状態でOK。
+
+続けて、`composer require`コマンドで必要なパッケージ群をインストールしていく。  
+一括でもインストールできるが、今回はひとつずつ入れていく。
+
+```bash
+composer require league/route
+```
+
+```bash
+composer require laminas/laminas-diactoros
+```
+
+```bash
+composer require laminas/laminas-httphandlerrunner
+```
+
+### ライブラリの依存関係について
+
+league/routeをインストール時、依存関係が色々ごそっと入るが、
+ベンダー名が`psr`となっているものはPHP-FIGが定義したPSRのインターフェイスであり、
+それ自体が実装を伴うものではないので問題ない。  
+
+- nikic/fast-route  
+  軽量なルーティングライブラリ。Slimもこれに依存している。  
+  nikic（Nikita Popov）はPHPのコア開発者だった人物で、昨今のPHPが小うるさい感じに進化している原因。  
+  近頃はRustに興味があるらしく、PHP8.1のリリースと同時にコア開発からは離脱したが、  
+  それ以降にもRFCを提出しているのが確認できるので、精力的なのは相変わらずの模様。  
+
+- opis/closure  
+  これが一番謎。
+  > Opis Closureは、すべてのクロージャーをシリアル化できるラッパーを提供することにより、クロージャーのシリアル化に関するPHPの制限を克服することを目的としたライブラリです。
+
+  PHPではClosureをserialize()しようとするとエラーになるが、それをどうにかしているらしい。  
+  ルーティングに必要な大量のClosureをシリアル化することで、実行速度の低下を防ぐものと思われる。  
+  `opis`は他にも基本的な複数のライブラリを長らくメンテナンスしている開発者団体。
+
+## ルーティングの記述
+
+まずはプロジェクトディレクトリ直下に`index.php`を作成、以下を記述する。
+
+```PHP
+<?php
+
+declare(strict_types=1);
+
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+```
+
+開発段階なのですべてのエラーを出す。  
+declare(strict_types=1)は、これがないと関数などの型が曖昧になるので、全ファイルに開発/本番を問わず必ず記述する。
+
+続けて`index.php`に以下を追記する。
+
+```PHP
+use \League\Route\Router;
+use \Psr\Http\Message\ResponseInterface;
+use \Psr\Http\Message\ServerRequestInterface;
+
+const BASE_ROUTE = '/routing_practice';
+
+// Requestオブジェクトを生成
+$request = Laminas\Diactoros\ServerRequestFactory::fromGlobals();
+
+$router = new Router();
+
+// ルーティングを登録
+$router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request): ResponseInterface {
+    // URLパラメータからidの値を取得
+    $query_params = $request->getQueryParams();
+    $id = filter_var($query_params['id'] ?? null, FILTER_VALIDATE_INT);
+
+    // Responseオブジェクトを生成
+    $response = new \Laminas\Diactoros\Response;
+    $response->getBody()->write(<<< HTML
+        <h1>products</h1>
+        <p>ID:{$id}</p>
+    HTML);
+
+    // Responseオブジェクトを返却
+    return $response;
+})->setName('Index');
+
+// Responseオブジェクトを生成
+$response = $router->dispatch($request);
+
+// ResponseオブジェクトからHTTPレスポンスを出力
+(new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+```
+
+`Router::map`の第三引数に渡しているのが、具体的な処理内容（ルーティングコールバック）となる。  
+全体としては以下の流れになっている。
+
+```txt
+Request生成 -> ルーティング登録 -> Response生成 -> HTTPレスポンス返却
+```
+
+## コールバックの切り出し
+
+ひとつのファイル内に処理を書いていくと、ルートが増えるにつれて肥大化していくので、  
+ルーティングコールバックはAction（Controller）クラスとして、別ファイルに切り出すようにする。
+
+`composer init`時に作成された`src`ディレクトリ内に、`IndexAction.php`を作成。以下を記述する。
+
+```PHP
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+use \Psr\Http\Message\ResponseInterface;
+use \Psr\Http\Message\ServerRequestInterface;
+
+class IndexAction
+{
+    /**
+     * インスタンス化の際にResponseオブジェクトを受け取る
+     *
+     * @param ResponseInterface $response
+     */
+    public function __construct(private readonly ResponseInterface $response)
+    {
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function __invoke(ServerRequestInterface $request): ResponseInterface
+    {
+        // URLパラメータからidの値を取得
+        $query_params = $request->getQueryParams();
+        $id = filter_var($query_params['id'] ?? null, FILTER_VALIDATE_INT);
+
+        // Responseオブジェクトを生成
+        $response = new \Laminas\Diactoros\Response;
+        $response->getBody()->write(<<< HTML
+            <h1>products</h1>
+            <p>ID:{$id}</p>
+        HTML);
+
+        // Responseオブジェクトを返却
+        return $response;
+    }
+}
+```
+
+ルーティング登録部分を以下のように変更
+
+```PHP
+$router = new Router();
+
+$response = new \Laminas\Diactoros\Response;
+
+$router->map('GET', BASE_ROUTE . '/', new \App\IndexAction($response))->setName('Index');
+```
+
+先に生成したResponseオブジェクトを、IndexActionのコンストラクタに注入してインスタンス化。  
+そのIndexActionのオブジェクトをルーティングコールバックとして渡すように変更した。  
+IndexActionはクラスだが、関数呼び出しがおこなわれると__invokeメソッドが呼ばれるので、変更前と同じように処理が実行される。
+
+---
+
+ルーティングの基本は以上。  
+実際はさらにラップして、MVCやADRなどのパターンを構築していく。
