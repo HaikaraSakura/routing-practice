@@ -77,7 +77,7 @@ league/routeをインストール時、依存関係が色々ごそっと入る�
 
 ## ルーティングの記述
 
-まずはプロジェクトディレクトリ直下に`index.php`を作成、以下を記述する。
+プロジェクトディレクトリ直下に`index.php`を作成、以下を記述する。
 
 ```PHP
 <?php
@@ -91,16 +91,15 @@ error_reporting(E_ALL);
 開発段階なのですべてのエラーを出す。  
 declare(strict_types=1)は、これがないと関数などの型が曖昧になるので、全ファイルに開発/本番を問わず必ず記述する。
 
-続けて`index.php`に以下を追記し、以下のようなURLでブラウザで動作を確認する。  
+続けて`index.php`に以下を追記し、ブラウザで動作を確認する（下記URLは例）。  
 [http://192.168.64.8/routing_practice/?id=1](http://192.168.64.8/routing_practice/?id=1)  
-
-※BASE_ROUTE定数の値は任意のディレクトリ名に変更のこと。
 
 ```PHP
 use \League\Route\Router;
 use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 
+// 任意のディレクトリ名に変更すること
 const BASE_ROUTE = '/routing_practice';
 
 // Requestオブジェクトを生成
