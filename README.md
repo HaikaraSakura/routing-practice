@@ -126,6 +126,8 @@ use \Psr\Http\Message\ServerRequestInterface;
 // 任意のディレクトリ名に変更すること
 const BASE_ROUTE = '/routing_practice';
 
+require_once './vendor/autoload.php';
+
 // Requestオブジェクトを生成
 $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals();
 
@@ -139,7 +141,7 @@ $router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request)
 
     // Responseオブジェクトを生成
     $response = new \Laminas\Diactoros\Response;
-    $response->getBody()->write(<<< HTML
+    $response->withBody(<<< HTML
         <h1>Index</h1>
         <p>ID:{$id}</p>
     HTML);
