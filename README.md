@@ -141,7 +141,7 @@ $router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request)
 
     // Responseオブジェクトを生成
     $response = new \Laminas\Diactoros\Response;
-    $response->withBody(<<< HTML
+    $response->getBody()->write(<<< HTML
         <h1>Index</h1>
         <p>ID:{$id}</p>
     HTML);
@@ -211,15 +211,13 @@ class IndexAction
         $query_params = $request->getQueryParams();
         $id = filter_var($query_params['id'] ?? null, FILTER_VALIDATE_INT);
 
-        // Responseオブジェクトを生成
-        $response = new \Laminas\Diactoros\Response;
-        $response->withBody(<<< HTML
+        $this->response->getBody()->write(<<< HTML
             <h1>Index</h1>
             <p>ID:{$id}</p>
         HTML);
 
         // Responseオブジェクトを返却
-        return $response;
+        return $this->response;
     }
 }
 ```
