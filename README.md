@@ -141,6 +141,8 @@ $router->map('GET', BASE_ROUTE . '/', function (ServerRequestInterface $request)
 
     // Responseオブジェクトを生成
     $response = new \Laminas\Diactoros\Response;
+    
+    // レスポンスボディに書き込み
     $response->getBody()->write(<<< HTML
         <h1>Index</h1>
         <p>ID:{$id}</p>
@@ -211,6 +213,7 @@ class IndexAction
         $query_params = $request->getQueryParams();
         $id = filter_var($query_params['id'] ?? null, FILTER_VALIDATE_INT);
 
+        // レスポンスボディに書き込み
         $this->response->getBody()->write(<<< HTML
             <h1>Index</h1>
             <p>ID:{$id}</p>
@@ -227,8 +230,10 @@ class IndexAction
 ```PHP
 $router = new Router();
 
+// Responseオブジェクトを生成
 $response = new \Laminas\Diactoros\Response;
 
+// コールバックとしてIndexActionのインスタンスを渡す
 $router->map('GET', BASE_ROUTE . '/', new \App\IndexAction($response))->setName('Index');
 ```
 
