@@ -213,7 +213,7 @@ class IndexAction
 
         // Responseオブジェクトを生成
         $response = new \Laminas\Diactoros\Response;
-        $response->getBody()->write(<<< HTML
+        $response->withBody(<<< HTML
             <h1>Index</h1>
             <p>ID:{$id}</p>
         HTML);
