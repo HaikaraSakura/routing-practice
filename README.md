@@ -93,6 +93,8 @@ league/routeをインストール時、依存関係が色々ごそっと入る�
 
 ## ルーティングの記述
 
+
+プロジェクトディレクトリ直下にpublicディレクトリを作成。  
 プロジェクトディレクトリ直下に`.htaccess`を作成、以下を記述する。
 
 ```txt
@@ -124,9 +126,9 @@ use \Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface;
 
 // 任意のディレクトリ名に変更すること
-const BASE_ROUTE = '/routing_practice';
+const BASE_ROUTE = '/knp/routing_practice';
 
-require_once './vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 // Requestオブジェクトを生成
 $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals();
