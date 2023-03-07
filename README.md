@@ -236,7 +236,7 @@ $router = new Router();
 $response = new \Laminas\Diactoros\Response;
 
 // コールバックとしてIndexActionのインスタンスを渡す
-$router->map('GET', BASE_ROUTE . '/', new \App\IndexAction($response))->setName('Index');
+$router->map('GET', BASE_ROUTE . '/', (new \App\IndexAction($response)))->setName('Index');
 ```
 
 先に生成したResponseオブジェクトを、IndexActionのコンストラクタに注入してインスタンス化。  
