@@ -128,7 +128,7 @@ use \Psr\Http\Message\ServerRequestInterface;
 // 任意のディレクトリ名に変更すること
 const BASE_ROUTE = '/knp/routing_practice';
 
-require_once '../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 // Requestオブジェクトを生成
 $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals();
